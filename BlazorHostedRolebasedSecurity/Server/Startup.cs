@@ -34,7 +34,11 @@ namespace BlazorHostedRolebasedSecurity.Server
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("SQLiteConnection")));
-            
+
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+                    options.SignIn.RequireConfirmedAccount = false)
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+
             // setting password strength
             services.Configure<IdentityOptions>(options =>
             {
@@ -49,13 +53,16 @@ namespace BlazorHostedRolebasedSecurity.Server
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
+                             .AddApiAuthorization<ApplicationUser, ApplicationDbContext>(opt =>
+                             {
+                                 opt.IdentityResources["openid"].UserClaims.Add("role");
+                                 opt.ApiResources.Single().UserClaims.Add("role");
+                             });
             services.AddAuthentication()
+
+
                 .AddIdentityServerJwt();
 
             services.AddControllersWithViews();

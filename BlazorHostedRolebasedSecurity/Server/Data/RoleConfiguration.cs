@@ -15,13 +15,13 @@ namespace BlazorHostedRolebasedSecurity.Server.Data
             builder.HasData(
                 new IdentityRole
                 {
-                    Name = "Visitor",
-                    NormalizedName = "VISITOR"
+                    Name = "User",
+                    NormalizedName = "USER"
                 },
                 new IdentityRole
                 {
-                    Name = "Administrator",
-                    NormalizedName = "ADMINISTRATOR"
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
                 }
             );
         }
